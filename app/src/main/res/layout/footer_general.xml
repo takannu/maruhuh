@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lnFooter"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentBottom="true"
+    android:background="@android:color/transparent"
+    android:gravity="bottom">
+
+    <TextView
+        android:id="@+id/tvFooterTop"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:text="TOP"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:textSize="10dp"
+        android:background="@android:color/white"
+        android:paddingTop="3dp"
+        android:textColor="@drawable/btn_tab_textcolor_selector"
+        android:drawableTop="@drawable/btn_tab_home_selector"/>
+
+    <TextView
+        android:id="@+id/tvFooterHistory"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_weight="1"
+        android:text="履歴"
+        android:background="@android:color/white"
+        android:paddingTop="3dp"
+        android:gravity="center"
+        android:textSize="10dp"
+        android:textColor="@drawable/btn_tab_textcolor_selector"
+        android:drawableTop="@drawable/btn_tab_history_selector"/>
+</LinearLayout>

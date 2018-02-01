@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="105dp"
+    android:minHeight="105dp"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvHistoryDate"
+                android:layout_width="260dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:text="2017.10.28 07:25"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/tvHistoryQuestion"
+                android:textColor="#000"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Q. 質問内容！！！！！！"/>
+
+            <TextView
+                android:id="@+id/tvHistoryAnswer"
+                android:textColor="#000"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A. 回答内容！！！！！！"/>
+        </LinearLayout>
+
+</LinearLayout>

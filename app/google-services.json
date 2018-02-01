@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "136601557724",
+    "firebase_url": "https://maruhah-82594.firebaseio.com",
+    "project_id": "maruhah-82594",
+    "storage_bucket": "maruhah-82594.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136601557724:android:07214ae4c2b511d5",
+        "android_client_info": {
+          "package_name": "jp.co.atschool.maruhah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136601557724-6qeeb029qag55itdap2tkbidubpfm72e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jp.co.atschool.maruhah",
+            "certificate_hash": "2aafa91de9a49cdf1001a330c94569b25645597a"
+          }
+        },
+        {
+          "client_id": "136601557724-q6qndjo07glbrnn916tsso61c05rr7hq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJn7orkg_0COW9TOI0wmJQaE4gOvQ9n7Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136601557724-q6qndjo07glbrnn916tsso61c05rr7hq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

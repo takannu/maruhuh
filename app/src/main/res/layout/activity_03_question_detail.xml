@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="jp.co.atschool.maruhah.Activity.Activity03QuestionDetail">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lnFooter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <RelativeLayout
+            android:id="@+id/nvBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_header"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tvMyprofileTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/navigation_button_default" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/ivBody"
+            android:layout_width="400dp"
+            android:layout_height="278dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:text="質問に回答しましょう。" />
+
+        <EditText
+            android:id="@+id/etAnswer"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/frame_style"
+            android:gravity="top"
+            android:padding="5dp" />
+
+        <Button
+            android:id="@+id/bSendAnswer"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_base_style"
+            android:padding="5dp"
+            android:text="回答を送る"
+            android:textColor="@color/text_color_white" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

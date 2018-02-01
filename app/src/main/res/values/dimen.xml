@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="height_header">48dp</dimen>
+    <dimen name="navigation_button_default">18dp</dimen>
+</resources>

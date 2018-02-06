@@ -47,6 +47,8 @@ public class Activity01Login extends AppCompatActivity {
                     public void success(Result<User> result) {
                         // 登録
                         NetworkUser.sendFirebaseUser(result.data.screenName, new NetworkUser(result.data.idStr,result.data.screenName));
+
+//                        finish();
                     }
 
                     public void failure(TwitterException exception) {

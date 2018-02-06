@@ -24,18 +24,20 @@ public class Adapter02History extends RecyclerView.Adapter {
     private Activity mActivity;
     private LayoutInflater layoutInflater = null;
     private ArrayList bodyList;
+    private ArrayList answerList;
     private ArrayList dateList;
     private ArrayList documentKeyList;
 
     public Integer poss = 0; // 横軸の位置
 
-    public Adapter02History(Activity activity, Integer position, ArrayList dates, ArrayList bodys, ArrayList document_keys) {
+    public Adapter02History(Activity activity, Integer position, ArrayList dates, ArrayList bodys, ArrayList answers, ArrayList document_keys) {
         this.mActivity = activity;
         this.layoutInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         poss = position; // 横軸の位置
         dateList = dates;
         bodyList = bodys;
+        answerList = answers;
         documentKeyList = document_keys;
     }
 
@@ -54,6 +56,7 @@ public class Adapter02History extends RecyclerView.Adapter {
 
         viewHolder.tvHistoryDate.setText(dateList.get(position).toString());
         viewHolder.tvHistoryQuestion.setText(bodyList.get(position).toString());
+        viewHolder.tvHistoryAnswer.setText(answerList.get(position).toString());
     }
 
     @Override

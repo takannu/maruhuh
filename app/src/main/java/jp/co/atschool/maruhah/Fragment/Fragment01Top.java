@@ -2,7 +2,6 @@ package jp.co.atschool.maruhah.Fragment;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,8 +30,8 @@ import jp.co.atschool.maruhah.Network.NetworkQuestion;
 import jp.co.atschool.maruhah.Network.NetworkUser;
 import jp.co.atschool.maruhah.R;
 import jp.co.atschool.maruhah.Utils.AsyncImageView;
+import jp.co.atschool.maruhah.Utils.DataPreferences;
 import jp.co.atschool.maruhah.Utils.DialogUtils;
-import jp.co.atschool.maruhah.Utils.ImageUtils;
 import retrofit2.Call;
 
 public class Fragment01Top extends Fragment {
@@ -47,7 +46,6 @@ public class Fragment01Top extends Fragment {
     @BindView(R.id.ivMyProfile) ImageView ivMyProfile; // twitterプロフィール画像
     @BindView(R.id.etQuestion) EditText etQuestion; // 質問入力フィールド
     @BindView(R.id.bSendQuestion) Button bSendQuestion; // 質問を送るボタン
-    @BindView(R.id.ivTestImage) ImageView ivTestImage; //
 
     // ライフサイクル1回目に呼び出される。
     @SuppressWarnings("deprecation")
@@ -72,7 +70,6 @@ public class Fragment01Top extends Fragment {
         tvUserId = (TextView) view.findViewById(R.id.tvUserId);
         etQuestion = (EditText) view.findViewById(R.id.etQuestion);
         bSendQuestion = (Button) view.findViewById(R.id.bSendQuestion);
-        ivTestImage = (ImageView) view.findViewById(R.id.ivTestImage);
 
         // 質問募集ボタンを押したら、ツイートを行う。
         ibTweetOpen.setOnClickListener(new View.OnClickListener() {
@@ -109,10 +106,6 @@ public class Fragment01Top extends Fragment {
             }
         });
 
-        Bitmap bitmap = ImageUtils.getTextSynthesisImage(getContext() ,getResources(), "これから朝ごはんを食べますが、何がオススメですか？\nあと、これからジョギングに出かけるのですが、汗をかかないためにスポーツウェアをきて行こうと考えています。スポーツウェアが売っているオススメなチェーン店は東京都品川区にありますか？");
-
-        ivTestImage.setImageBitmap(bitmap);
-
         return view;
     }
 
@@ -123,6 +116,11 @@ public class Fragment01Top extends Fragment {
         setInformation();
 
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+
+        if (session == null) {
+            Log.d("log", "NULLだよ");
+        }
+
         UserService userService = new CustomTwitterApiClient(session).getUserService();
 
         Call<User> calls = userService.show(session.getId(), null, null);
@@ -144,6 +142,9 @@ public class Fragment01Top extends Fragment {
 
                 // DBにuser情報を取得する。
                 NetworkUser.sendFirebaseUser(twitter_id, new NetworkUser(twitter_id,twitter_screen_name));
+
+                // 自分の端末にも保存する。(不動な数値)
+                DataPreferences.setTwitterId(getContext(), twitter_id);
             }
 
             public void failure(TwitterException exception) {

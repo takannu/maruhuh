@@ -7,17 +7,19 @@ import java.util.Date;
  */
 
 public class ModelQuestionList {
-    private Date created_date;
-    private String body;
-    private String twitter_id;
-    private String document_key;
+    private Date created_date = new Date();
+    private String body = "";
+    private String answer = "";
+    private String twitter_id = "";
+    private String document_key = "";
 
     public ModelQuestionList() {
     }
 
-    public ModelQuestionList(Date created_date, String body, String twitter_id) {
+    public ModelQuestionList(Date created_date, String body, String answer, String twitter_id) {
         this.created_date = created_date;
         this.body = body;
+        this.answer = answer;
         this.twitter_id = twitter_id;
     }
 
@@ -28,6 +30,8 @@ public class ModelQuestionList {
     public String getBody() {
         return body;
     }
+
+    public String getAnswer() { return answer; }
 
     public String getTwitter_id() {
         return twitter_id;

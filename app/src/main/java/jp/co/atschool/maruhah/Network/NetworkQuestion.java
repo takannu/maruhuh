@@ -11,9 +11,9 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,20 +27,10 @@ import jp.co.atschool.maruhah.Models.ModelQuestionList;
 public class NetworkQuestion {
     private String twitter_id; // 質問された側のユニーク値
     private String body; // 質問内容
-    private Timestamp created_date; // 質問した日
 
     public NetworkQuestion(String body, String twitter_id){
         this.twitter_id = twitter_id;
         this.body = body;
-    }
-    public String getTwitter_id(){
-        return twitter_id;
-    }
-    public String getBody(){
-        return body;
-    }
-    public Timestamp getCreated_date(){
-        return created_date;
     }
 
     @Exclude
@@ -48,16 +38,13 @@ public class NetworkQuestion {
         HashMap<String, Object> hashmap = new HashMap<>();
         hashmap.put("twitter_id", twitter_id);
         hashmap.put("body", body);
+//        hashmap.put("answer", " ");
         hashmap.put("read", 0);
         hashmap.put("created_date", FieldValue.serverTimestamp());
         return hashmap;
     }
 
     public static void sendFirebaseQuestion(String key ,NetworkQuestion question){
-
-//        Map<String, Object> map = new HashMap<>();
-//        map.put(key, question.toMap());// keyをタイムスタンプにする！　と思いましたが、やめました。
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("questions").document()
                 .set(question.sendQuestionMap())
@@ -79,6 +66,9 @@ public class NetworkQuestion {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<ModelQuestionList> arrayList = new ArrayList<>();
         db.collection("questions")
+                .whereEqualTo("twitter_id", twitter_id)
+                .whereEqualTo("read", 0)
+                .orderBy("created_date", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -86,9 +76,6 @@ public class NetworkQuestion {
                         if (task.isSuccessful()) {
                             int i = 0;
                             for (DocumentSnapshot document : task.getResult()) {
-
-                                Log.d("tag", document.getId());
-
                                 arrayList.add(document.toObject(ModelQuestionList.class));
                                 arrayList.get(i).setDocument_key(document.getId());
                                 i++;

@@ -11,14 +11,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.User;
 
+import jp.co.atschool.maruhah.Api.CustomTwitterApiClient;
+import jp.co.atschool.maruhah.Api.UserService;
 import jp.co.atschool.maruhah.Fragment.Fragment01Top;
 import jp.co.atschool.maruhah.Fragment.Fragment02History;
+import jp.co.atschool.maruhah.Network.NetworkUser;
+import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -32,28 +42,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
+    private TwitterLoginButton loginButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        // footerの各ボタンを有効化
-        setButtons();
-        // defaultで選択されているfooterをセット
-        switchTab(R.id.tvFooterTop);
         // twitterのログイン状況を判断する。
         twitters();
         // firebaseのanalyticsをセット
         firebases();
 
-        // Login画面に移動させる
         if (TwitterCore.getInstance().getSessionManager().getActiveSession() == null) {
-            Intent intent = new Intent(this, Activity01Login.class);
-            startActivity(intent);
+            // Login画面にする
+            setContentView(R.layout.activity_01_login);
+
+            loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
+            loginButton.setCallback(new Callback<TwitterSession>() {
+                @Override
+                public void success(Result<TwitterSession> result) {
+                    // Do something with result, which provides a TwitterSession for making API calls
+
+                    Toast toast = Toast.makeText(MainActivity.this, "ログイン成功", Toast.LENGTH_LONG);
+                    toast.show();
+
+                    // ログインが成功したら、firabaseDBに登録する
+                    TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+                    UserService userService = new CustomTwitterApiClient(session).getUserService();
+
+                    Call<User> calls = userService.show(session.getId(), null, null);
+                    calls.enqueue(new Callback<User>() {
+                        @Override
+                        public void success(Result<User> result) {
+                            // 登録
+                            NetworkUser.sendFirebaseUser(result.data.screenName, new NetworkUser(result.data.idStr,result.data.screenName));
+
+                            // 通常画面にする
+                            setTop();
+                        }
+
+                        public void failure(TwitterException exception) {
+                            //Do something on failure
+                            Log.d("LOG", "失敗。。");
+                        }
+                    });
+                }
+
+                @Override
+                public void failure(TwitterException exception) {
+                    // Do something on failure
+
+                    Toast toast = Toast.makeText(MainActivity.this, "ログイン失敗", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            });
         } else {
-            Toast toast = Toast.makeText(MainActivity.this, "ログイン中", Toast.LENGTH_LONG);
-            toast.show();
+            // 通常画面にする
+            setTop();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void setTop(){
+        // 通常画面にする
+        setContentView(R.layout.activity_main);
+        // footerの各ボタンを有効化
+        setButtons();
+        // defaultで選択されているfooterをセット
+        switchTab(R.id.tvFooterTop);
+
+        Toast toast = Toast.makeText(MainActivity.this, "ログイン中", Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private void setButtons(){
@@ -125,5 +188,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void firebases() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Pass the activity result to the login button.
+        loginButton.onActivityResult(requestCode, resultCode, data);
     }
 }

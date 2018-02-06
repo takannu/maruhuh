@@ -19,7 +19,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -39,6 +39,8 @@ dependencies {
     compile 'com.google.firebase:firebase-firestore:11.8.0'
 
     compile 'com.android.support:design:26.1.0'
+
+    compile 'org.twitter4j:twitter4j-core:4.0.4'
 }
 
 

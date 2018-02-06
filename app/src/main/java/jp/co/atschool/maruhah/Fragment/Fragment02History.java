@@ -9,14 +9,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +26,7 @@ import jp.co.atschool.maruhah.Models.ModelQuestionList;
 import jp.co.atschool.maruhah.Network.NetworkQuestion;
 import jp.co.atschool.maruhah.Network.NetworkUtilListener;
 import jp.co.atschool.maruhah.R;
+import jp.co.atschool.maruhah.Utils.DataPreferences;
 
 public class Fragment02History extends Fragment {
 
@@ -119,7 +121,7 @@ public class Fragment02History extends Fragment {
         public int pos = 0;
 
         private ArrayList<String> document_keys = new ArrayList<String>();
-        private ArrayList<Date> dates = new ArrayList<>();
+        private ArrayList<String> dates = new ArrayList<>();
         private ArrayList<String> bodys = new ArrayList<String>();
         private ArrayList<String> answers = new ArrayList<String>();
 
@@ -149,6 +151,7 @@ public class Fragment02History extends Fragment {
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_02_history_pager, null);
             ButterKnife.bind(this, view);
+
             return view;
         }
 
@@ -164,6 +167,12 @@ public class Fragment02History extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
             rvHistory = (RecyclerView) view.findViewById(R.id.rvHistory);
+
+            // 下線をつける
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvHistory.getContext(),
+                    new LinearLayoutManager(getActivity()).getOrientation());
+            rvHistory.addItemDecoration(dividerItemDecoration);
+
             rvHistory.setLayoutManager(linearLayoutManager);
             rvHistory.setNestedScrollingEnabled(false);
 
@@ -181,23 +190,28 @@ public class Fragment02History extends Fragment {
         }
 
         public void reloadView() {
-            NetworkQuestion.getFirebaseQuestionList("tyano0930" ,new NetworkUtilListener() {
+            NetworkQuestion.getFirebaseQuestionList(DataPreferences.getTwitterId(this.getContext()) ,new NetworkUtilListener() {
                 @Override
                 public void OnSuccess(ArrayList<ModelQuestionList> arrayList) {
-
-                    dates = new ArrayList<Date>();
+                    dates = new ArrayList<String>();
                     bodys = new ArrayList<String>();
                     document_keys = new ArrayList<String>();
+                    answers = new ArrayList<String>();
 
                     for (int i = 0; i < arrayList.size(); i++) {
-                        dates.add(arrayList.get(i).getCreated_date());
+                        // 日付を日本語に直す
+                        long time = arrayList.get(i).getCreated_date().getTime();
+                        String date_string = DateUtils.formatDateTime(getContext(), time, DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_ABBREV_ALL);
+
+                        dates.add(date_string);
                         bodys.add(arrayList.get(i).getBody());
                         document_keys.add(arrayList.get(i).getDocument_key());
+                        answers.add(arrayList.get(i).getAnswer());
                     }
 
                     // Flagmentを高速で切り替えると強制終了してしまう対策で、getActivity()のnullチェックを行う。
                     if ( getActivity() != null ) {
-                        adapter = new Adapter02History(getActivity(), pos, dates, bodys, document_keys);
+                        adapter = new Adapter02History(getActivity(), pos, dates, bodys, answers, document_keys);
                         rvHistory.setAdapter(adapter);
                     }
 
@@ -205,55 +219,6 @@ public class Fragment02History extends Fragment {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             });
-
-            /*
-            ApiUtilRanking.getApiAppQaOdekake_ranking(3, pos+1, new ApiUtilListener() {
-
-                @Override
-                public void OnWSError(String error) {
-                    progressDialog.dismiss();
-                    // 上に引っ張った場合、くるくるを止める
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void OnSuccess(String result) {
-
-                    try {
-                        JSONObject json = new JSONObject(result);
-                        JSONArray rankingArray = json.getJSONObject("data").getJSONArray("list");
-
-                        // reloadするときは配列を初期化する。
-                        contents = new ArrayList<String>();
-                        comment_counts = new ArrayList<Integer>();
-                        favorite_couonts = new ArrayList<Integer>();
-                        dates = new ArrayList<String>();
-                        question_ids = new ArrayList<Integer>();
-
-
-
-                        for (int i=0;i<rankingArray.length();i++){
-                            contents.add(rankingArray.getJSONObject(i).getString("title") + rankingArray.getJSONObject(i).getString("description"));
-                            comment_counts.add(rankingArray.getJSONObject(i).getInt("num_of_answers"));
-                            favorite_couonts.add(rankingArray.getJSONObject(i).getInt("num_of_favorite"));
-                            dates.add(rankingArray.getJSONObject(i).getString("pub_date"));
-                            question_ids.add(rankingArray.getJSONObject(i).getInt("question_id"));
-                        }
-
-                        // Flagmentを高速で切り替えると強制終了してしまう対策で、getActivity()のnullチェックを行う。
-                        if ( getActivity() != null ) {
-                            adapter = new Adapter04Ranking(getActivity(), pos, question_ids, contents, comment_counts, favorite_couonts, dates);
-                            rvRanking.setAdapter(adapter);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    progressDialog.dismiss();
-                    // 上に引っ張った場合、くるくるを止める
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            });
-            */
         }
 
         /**

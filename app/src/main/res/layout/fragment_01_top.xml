@@ -114,27 +114,12 @@
             android:background="@drawable/btn_base_style"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="30dp"
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:padding="5dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center"
-            android:text="質問が届きました。"/>
-
-        <ImageView android:id="@+id/ivTestImage"
-            android:layout_width="400dp"
-            android:layout_height="278dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_gravity="center"
-            android:layout_centerHorizontal="true" />
-
     </LinearLayout>
     </ScrollView>
 </FrameLayout>

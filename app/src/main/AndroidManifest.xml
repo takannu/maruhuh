@@ -11,13 +11,10 @@
         android:theme="@style/AppThemeNone">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-
-                <data
-                    android:host="maruhah-host"
-                    android:scheme="maruhah-scheme" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="maruhah-scheme" android:host="maruhah-host" />
             </intent-filter>
         </activity>
         <activity android:name=".Activity01Login" />

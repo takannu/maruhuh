@@ -27,7 +27,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Q. 質問内容！！！！！！"/>
+                android:text="Q. 褒め内容"/>
 
             <TextView
                 android:id="@+id/tvHistoryAnswer"
@@ -36,7 +36,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="A. 回答内容！！！！！！"/>
+                android:text="A. お礼内容"/>
         </LinearLayout>
 
 </LinearLayout>

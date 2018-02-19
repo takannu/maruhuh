@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
-            android:text="質問に回答しましょう。" />
+            android:text="褒めてくれた内容に、感謝の気持ちを返しましょう。" />
 
         <EditText
             android:id="@+id/etAnswer"
@@ -69,7 +69,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/btn_base_style"
             android:padding="5dp"
-            android:text="回答を送る"
+            android:text="お礼を送る"
             android:textColor="@color/text_color_white" />
 
     </LinearLayout>

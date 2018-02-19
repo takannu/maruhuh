@@ -2,6 +2,7 @@ package jp.co.atschool.maruhah.Fragment;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,14 +25,15 @@ import com.twitter.sdk.android.core.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.co.atschool.maruhah.Activity.Activity05UserSearch;
 import jp.co.atschool.maruhah.Api.CustomTwitterApiClient;
 import jp.co.atschool.maruhah.Api.UserService;
 import jp.co.atschool.maruhah.Network.NetworkQuestion;
-import jp.co.atschool.maruhah.Network.NetworkUser;
 import jp.co.atschool.maruhah.R;
 import jp.co.atschool.maruhah.Utils.AsyncImageView;
 import jp.co.atschool.maruhah.Utils.DataPreferences;
 import jp.co.atschool.maruhah.Utils.DialogUtils;
+import jp.co.atschool.maruhah.Utils.LemonProgressDialog;
 import retrofit2.Call;
 
 public class Fragment01Top extends Fragment {
@@ -40,6 +42,9 @@ public class Fragment01Top extends Fragment {
     private String twitter_screen_name;
     private String twitter_id;
 
+    private LemonProgressDialog progressDialog;
+
+    @BindView(R.id.bTopSearch) Button bTopSearch; // ユーザ検索を行う
     @BindView(R.id.ibTweetOpen) ImageButton ibTweetOpen; // 質問を募集する
     @BindView(R.id.tvUserName) TextView tvUserName; // ユーザ名
     @BindView(R.id.tvUserId) TextView tvUserId; // twitter screen_name
@@ -62,14 +67,27 @@ public class Fragment01Top extends Fragment {
         View view = inflater.inflate(R.layout.fragment_01_top, container, false);
         ButterKnife.bind(this, view);
 
-        mActivity.setTitle("Maruhah");
+        // インジゲータ
+        progressDialog = new LemonProgressDialog(getContext());
 
+        mActivity.setTitle("Homete");
+
+        bTopSearch = (Button) view.findViewById(R.id.bTopSearch);
         ibTweetOpen = (ImageButton) view.findViewById(R.id.ibTweetOpen);
         tvUserName = (TextView) view.findViewById(R.id.tvUserName);
         ivMyProfile = (ImageView) view.findViewById(R.id.ivMyProfile);
         tvUserId = (TextView) view.findViewById(R.id.tvUserId);
         etQuestion = (EditText) view.findViewById(R.id.etQuestion);
         bSendQuestion = (Button) view.findViewById(R.id.bSendQuestion);
+
+        // 押すとユーザ検索画面へ移動
+        bTopSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity, Activity05UserSearch.class);
+                mActivity.startActivity(intent);
+            }
+        });
 
         // 質問募集ボタンを押したら、ツイートを行う。
         ibTweetOpen.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +97,10 @@ public class Fragment01Top extends Fragment {
                 UserService userService = new CustomTwitterApiClient(session).getUserService();
 
                 CustomTwitterApiClient mTwitter = new CustomTwitterApiClient(session);
-                mTwitter.tweet(getContext(), "なんでも質問して下さい。");
+
+                String messsage= "私を褒めて下さい。";
+
+                mTwitter.tweet(getContext(), messsage);
 
                 DialogUtils.generalDialog(getActivity(), "ツイートしました。", "閉じる", new DialogInterface.OnClickListener() {
                     @Override
@@ -97,7 +118,7 @@ public class Fragment01Top extends Fragment {
 
                 NetworkQuestion.sendFirebaseQuestion(twitter_id, new NetworkQuestion(etQuestion.getText().toString(),twitter_id));
 
-                DialogUtils.generalDialog(getActivity(), "質問を送りました。", "閉じる", new DialogInterface.OnClickListener() {
+                DialogUtils.generalDialog(getActivity(), "褒めました。相手の反応を待ちましょう。", "閉じる", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -116,12 +137,9 @@ public class Fragment01Top extends Fragment {
         setInformation();
 
         TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-
-        if (session == null) {
-            Log.d("log", "NULLだよ");
-        }
-
         UserService userService = new CustomTwitterApiClient(session).getUserService();
+
+        progressDialog.show(); // イン時ゲータ
 
         Call<User> calls = userService.show(session.getId(), null, null);
         calls.enqueue(new Callback<User>() {
@@ -132,7 +150,7 @@ public class Fragment01Top extends Fragment {
                 twitter_screen_name = result.data.screenName;
 
                 tvUserName.setText(result.data.name);
-                tvUserId.setText("@" + twitter_screen_name + "の質問箱");
+                tvUserId.setText("@" + twitter_screen_name + "の褒め所");
 
                 // 画像が荒いので、normalという文字を消す。
                 String profile_image_url = result.data.profileImageUrlHttps;
@@ -140,16 +158,16 @@ public class Fragment01Top extends Fragment {
                 new AsyncImageView(ivMyProfile)
                         .execute(profile_image_url);
 
-                // DBにuser情報を取得する。
-                NetworkUser.sendFirebaseUser(twitter_id, new NetworkUser(twitter_id,twitter_screen_name));
-
                 // 自分の端末にも保存する。(不動な数値)
                 DataPreferences.setTwitterId(getContext(), twitter_id);
+
+                progressDialog.dismiss();
             }
 
             public void failure(TwitterException exception) {
                 //Do something on failure
                 Log.d("LOG", "失敗。。");
+                progressDialog.dismiss();
             }
         });
     }

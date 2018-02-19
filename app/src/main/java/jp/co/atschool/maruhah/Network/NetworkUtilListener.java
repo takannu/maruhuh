@@ -11,3 +11,4 @@ import jp.co.atschool.maruhah.Models.ModelQuestionList;
 public interface NetworkUtilListener {
     void OnSuccess(ArrayList<ModelQuestionList> arrayList);
 }
+

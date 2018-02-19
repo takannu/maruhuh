@@ -27,6 +27,8 @@ import jp.co.atschool.maruhah.Network.NetworkQuestion;
 import jp.co.atschool.maruhah.Network.NetworkUtilListener;
 import jp.co.atschool.maruhah.R;
 import jp.co.atschool.maruhah.Utils.DataPreferences;
+import jp.co.atschool.maruhah.Utils.LemonProgressDialog;
+import jp.co.atschool.maruhah.configs.Define;
 
 public class Fragment02History extends Fragment {
 
@@ -115,6 +117,7 @@ public class Fragment02History extends Fragment {
 
         Activity mActivity;
         private LinearLayoutManager linearLayoutManager;
+        private LemonProgressDialog progressDialog;
         private SwipeRefreshLayout mSwipeRefreshLayout; // 上に引っ張った時のくるくる
 
         private final static String ARG_POSITION = "ARG_POSITION";
@@ -152,6 +155,9 @@ public class Fragment02History extends Fragment {
             View view = inflater.inflate(R.layout.fragment_02_history_pager, null);
             ButterKnife.bind(this, view);
 
+            // インジゲータ
+            progressDialog = new LemonProgressDialog(getContext());
+
             return view;
         }
 
@@ -176,7 +182,7 @@ public class Fragment02History extends Fragment {
             rvHistory.setLayoutManager(linearLayoutManager);
             rvHistory.setNestedScrollingEnabled(false);
 
-            reloadView();
+            reloadView(Define.ReloadType.Overall);
         }
 
         @Override
@@ -189,8 +195,13 @@ public class Fragment02History extends Fragment {
             super.onResume();
         }
 
-        public void reloadView() {
-            NetworkQuestion.getFirebaseQuestionList(DataPreferences.getTwitterId(this.getContext()) ,new NetworkUtilListener() {
+        public void reloadView(Define.ReloadType refreshType) {
+
+            if (refreshType == Define.ReloadType.Overall) {
+                progressDialog.show();
+            }
+
+            NetworkQuestion.getFirebaseQuestionList(DataPreferences.getTwitterId(this.getContext()), pos,new NetworkUtilListener() {
                 @Override
                 public void OnSuccess(ArrayList<ModelQuestionList> arrayList) {
                     dates = new ArrayList<String>();
@@ -217,6 +228,7 @@ public class Fragment02History extends Fragment {
 
                     // 上に引っ張った場合、くるくるを止める
                     mSwipeRefreshLayout.setRefreshing(false);
+                    progressDialog.dismiss();
                 }
             });
         }
@@ -227,7 +239,7 @@ public class Fragment02History extends Fragment {
         @Override
         public void onRefresh() {
             // 引っ張ったタイミングでここに入る
-            this.reloadView();
+            this.reloadView(Define.ReloadType.Header);
         }
     }
 
@@ -257,7 +269,6 @@ public class Fragment02History extends Fragment {
                 default:
                     return "???";
             }
-
         }
     }
 }

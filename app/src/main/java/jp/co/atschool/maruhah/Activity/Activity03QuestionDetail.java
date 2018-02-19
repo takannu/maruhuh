@@ -19,6 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import jp.co.atschool.maruhah.Api.CustomTwitterApiClient;
 import jp.co.atschool.maruhah.R;
@@ -59,11 +62,15 @@ public class Activity03QuestionDetail extends AppCompatActivity {
         bSendAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Map<String, Object> nestedData = new HashMap<>();
+                nestedData.put("answer", etAnswer.getText().toString());
+                nestedData.put("read", 1);
+
                 // DB保存
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 DocumentReference washingtonRef = db.collection("questions").document(document_key);
                 washingtonRef
-                        .update("answer", etAnswer.getText().toString())
+                        .update(nestedData)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -80,10 +87,10 @@ public class Activity03QuestionDetail extends AppCompatActivity {
                 // ツイート
                 TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
 
-                String twiit_body = "\nQ. " + body + "\n\nA. " + etAnswer.getText().toString() + "\n";
+                String tweet_body = "\nQ. " + body + "\n\nA. " + etAnswer.getText().toString() + "\n";
 
                 CustomTwitterApiClient mTwitter = new CustomTwitterApiClient(session);
-                mTwitter.tweet(getApplicationContext(), twiit_body);
+                mTwitter.tweet(getApplicationContext(), tweet_body);
 
                 DialogUtils.generalDialog(activity03QuestionDetail, "回答しました。twitterを確認してみましょう。", "閉じる", new DialogInterface.OnClickListener() {
                     @Override

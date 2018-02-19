@@ -25,8 +25,8 @@ import jp.co.atschool.maruhah.Models.ModelQuestionList;
  */
 
 public class NetworkQuestion {
-    private String twitter_id; // 質問された側のユニーク値
-    private String body; // 質問内容
+    private String twitter_id; // 褒められた側のユニーク値
+    private String body; // 褒め内容
 
     public NetworkQuestion(String body, String twitter_id){
         this.twitter_id = twitter_id;
@@ -62,12 +62,12 @@ public class NetworkQuestion {
                 });
     }
 
-    public static void getFirebaseQuestionList(final String twitter_id , final NetworkUtilListener networkUtilListener) {
+    public static void getFirebaseQuestionList(final String twitter_id , final Integer read, final NetworkUtilListener networkUtilListener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<ModelQuestionList> arrayList = new ArrayList<>();
         db.collection("questions")
                 .whereEqualTo("twitter_id", twitter_id)
-                .whereEqualTo("read", 0)
+                .whereEqualTo("read", read)
                 .orderBy("created_date", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

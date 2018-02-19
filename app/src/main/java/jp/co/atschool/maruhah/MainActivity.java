@@ -28,6 +28,7 @@ import jp.co.atschool.maruhah.Api.UserService;
 import jp.co.atschool.maruhah.Fragment.Fragment01Top;
 import jp.co.atschool.maruhah.Fragment.Fragment02History;
 import jp.co.atschool.maruhah.Network.NetworkUser;
+import jp.co.atschool.maruhah.Network.NetworkUserCheckUtilListener;
 import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -73,12 +74,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Call<User> calls = userService.show(session.getId(), null, null);
                     calls.enqueue(new Callback<User>() {
                         @Override
-                        public void success(Result<User> result) {
-                            // 登録
-                            NetworkUser.sendFirebaseUser(result.data.screenName, new NetworkUser(result.data.idStr,result.data.screenName));
+                        public void success(final Result<User> result) {
 
-                            // 通常画面にする
-                            setTop();
+                            NetworkUser.getFirebaseUser(result.data.idStr,new NetworkUserCheckUtilListener() {
+                                @Override
+                                public void OnSuccess(String twitter_id) {
+                                    // 存在していたら、登録しない
+                                    if (twitter_id == "zumi") {
+                                        // 通常画面にする
+                                        setTop();
+                                    } else {
+                                        // 登録
+                                        NetworkUser.sendFirebaseUser(result.data.screenName, new NetworkUser(result.data.idStr, result.data.screenName));
+
+                                        // 通常画面にする
+                                        setTop();
+                                    }
+                                }
+                            });
                         }
 
                         public void failure(TwitterException exception) {

@@ -63,6 +63,28 @@ public class NetworkUser {
                 });
     }
 
+    public static void getFirebaseUser(final String twitter_id, final NetworkUserCheckUtilListener networkUtilUserCheckListener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final ArrayList<ModelUserList> arrayList = new ArrayList<>();
+        db.collection("users")
+                .whereEqualTo("twitter_id", twitter_id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                networkUtilUserCheckListener.OnSuccess("");
+                            } else {
+                                networkUtilUserCheckListener.OnSuccess("zumi");
+                            }
+                        } else {
+                            Log.d("tag", "エラー: ", task.getException());
+                        }
+                    }
+                });
+    }
+
     public static void getFirebaseUserList(final String screen_name, final NetworkUserUtilListener networkUtilListener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<ModelUserList> arrayList = new ArrayList<>();

@@ -98,9 +98,9 @@ public class Fragment01Top extends Fragment {
 
                 CustomTwitterApiClient mTwitter = new CustomTwitterApiClient(session);
 
-                String messsage= "私を褒めて下さい。";
+                String messsage= "私のいい所を褒めて下さい。";
 
-                mTwitter.tweet(getContext(), messsage);
+                mTwitter.tweet(getContext(), messsage, "");
 
                 DialogUtils.generalDialog(getActivity(), "ツイートしました。", "閉じる", new DialogInterface.OnClickListener() {
                     @Override

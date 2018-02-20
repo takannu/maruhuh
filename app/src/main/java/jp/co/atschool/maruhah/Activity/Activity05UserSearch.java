@@ -49,7 +49,7 @@ public class Activity05UserSearch extends AppCompatActivity {
         // フォーカスをデフォルトで当てるかどうか
 //        mySearchView.setIconified(false);
         // Submitボタンの表示設定
-        mySearchView.setQueryHint("スクリーンネームを入力(@以降のアルファベット)");
+        mySearchView.setQueryHint("@以降のアルファベット名を入力");
         mySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String screen_name) {

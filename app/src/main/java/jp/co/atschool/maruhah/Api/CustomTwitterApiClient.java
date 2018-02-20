@@ -5,6 +5,7 @@ package jp.co.atschool.maruhah.Api;
  */
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.Toast;
 
 import com.twitter.sdk.android.core.TwitterApiClient;
@@ -15,7 +16,7 @@ import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.services.MediaService;
 import com.twitter.sdk.android.core.services.StatusesService;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -36,11 +37,11 @@ public class CustomTwitterApiClient extends TwitterApiClient {
         return getService(UserMediaService.class);
     }
 
-    public void tweet(final Context context, String message) {
+    public void tweet(final Context context, String message, String media_id) {
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
         StatusesService statusesService = twitterApiClient.getStatusesService();
 
-        Call<Tweet> call = statusesService.update(message, null, false, null, null, null, false, false, null);
+        Call<Tweet> call = statusesService.update(message, null, false, null, null, null, false, false, media_id);
         call.enqueue(new Callback<Tweet>() {
             @Override
             public void onResponse(Call<Tweet> call, Response<Tweet> response) {
@@ -54,19 +55,24 @@ public class CustomTwitterApiClient extends TwitterApiClient {
         });
     }
 
-    public void media_upload(final Context context, String message) {
-        TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
+    public void media_upload(final Context context, final Bitmap bitmap, final String tweet_body) {
+        final TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
         MediaService mediaService = twitterApiClient.getMediaService();
 
-        File file1 = new File("path/to/your/file1");
-        RequestBody requestBody1 = RequestBody.create(MediaType.parse("multipart/form-data"), file1);
+        byte[] byteArray;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byteArray = byteArrayOutputStream.toByteArray();
+        RequestBody requestBody1 = RequestBody.create(MediaType.parse("multipart/form-data"), byteArray);
 
-        Call<Media> call = mediaService.upload(requestBody1,requestBody1,requestBody1);
+        Call<Media> call = mediaService.upload(requestBody1,null,null);
 
         call.enqueue(new Callback<Media>() {
             @Override
             public void onResponse(Call<Media> call, Response<Media> response) {
-                Toast.makeText(context, "post success", Toast.LENGTH_LONG).show();
+                TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+                CustomTwitterApiClient mTwitter = new CustomTwitterApiClient(session);
+                mTwitter.tweet(context, tweet_body, response.body().mediaIdString);
             }
 
             @Override

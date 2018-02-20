@@ -73,7 +73,7 @@
                 android:layout_gravity="center"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:text="私を褒めて下さい"/>
+                android:text="私のいい所を褒めて下さい(10行以内)"/>
 
             <EditText android:id="@+id/etQuestion"
                 android:layout_width="fill_parent"

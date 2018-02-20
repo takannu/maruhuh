@@ -2,10 +2,8 @@ package jp.co.atschool.maruhah.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,7 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,13 +55,14 @@ public class Activity03QuestionDetail extends AppCompatActivity {
         body = intent.getStringExtra("body");
         document_key = intent.getStringExtra("document_key");
 
-        Bitmap bitmap = ImageUtils.getTextSynthesisImage(getApplicationContext() ,getResources(), body);
+        final Bitmap bitmap = ImageUtils.getTextSynthesisImage(getApplicationContext() ,getResources(), body);
         ivBody.setImageBitmap(bitmap);
 
         // 回答ボタンを押したら、ツイートと回答内容DB保存を行う。
         bSendAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Map<String, Object> nestedData = new HashMap<>();
                 nestedData.put("answer", etAnswer.getText().toString());
                 nestedData.put("read", 1);
@@ -87,24 +85,12 @@ public class Activity03QuestionDetail extends AppCompatActivity {
                             }
                         });
 
+                String tweet_body = etAnswer.getText().toString() + "\n";
+
                 // ツイート
                 TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-
-                String tweet_body = "\n誰かの褒め文. " + body + "\n\n感謝文. " + etAnswer.getText().toString() + "\n";
-
                 CustomTwitterApiClient mTwitter = new CustomTwitterApiClient(session);
-
-                String[] projection = { MediaStore.Images.Media.DATA };
-                Cursor cursor = getActivity().managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-                int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToLast();
-                String photoPath =  cursor.getString(column_index_data);
-                File file = new File(photoPath);
-
-                // 画像をuploadしたい
-                mTwitter.media_upload(getApplicationContext());
-
-                mTwitter.tweet(getApplicationContext(), tweet_body);
+                mTwitter.media_upload(getApplicationContext(), bitmap, tweet_body);
 
                 DialogUtils.generalDialog(activity03QuestionDetail, "感謝の気持ちを送りました。\ntwitterを確認してみましょう。", "閉じる", new DialogInterface.OnClickListener() {
                     @Override

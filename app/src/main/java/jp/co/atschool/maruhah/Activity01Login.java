@@ -3,7 +3,6 @@ package jp.co.atschool.maruhah;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.twitter.sdk.android.core.Callback;
@@ -17,9 +16,12 @@ import com.twitter.sdk.android.core.models.User;
 import jp.co.atschool.maruhah.Api.CustomTwitterApiClient;
 import jp.co.atschool.maruhah.Api.UserService;
 import jp.co.atschool.maruhah.Network.NetworkUser;
+import jp.co.atschool.maruhah.Utils.LemonProgressDialog;
 import retrofit2.Call;
 
 public class Activity01Login extends AppCompatActivity {
+
+    private LemonProgressDialog progressDialog;
 
     private TwitterLoginButton loginButton;
 
@@ -28,13 +30,17 @@ public class Activity01Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_01_login);
 
+        // インジゲータ
+        progressDialog = new LemonProgressDialog(this);
+
         loginButton = (TwitterLoginButton) findViewById(R.id.login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 // Do something with result, which provides a TwitterSession for making API calls
+                progressDialog.show(); // イン時ゲータ
 
-                Toast toast = Toast.makeText(Activity01Login.this, "ログイン成功", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(Activity01Login.this, "処理中", Toast.LENGTH_LONG);
                 toast.show();
 
                 // ログインが成功したら、firabaseDBに登録する
@@ -48,12 +54,11 @@ public class Activity01Login extends AppCompatActivity {
                         // 登録
                         NetworkUser.sendFirebaseUser(result.data.screenName, new NetworkUser(result.data.idStr,result.data.screenName));
 
-//                        finish();
+                        progressDialog.dismiss();
                     }
 
                     public void failure(TwitterException exception) {
-                        //Do something on failure
-                        Log.d("LOG", "失敗。。");
+                        progressDialog.dismiss();
                     }
                 });
             }

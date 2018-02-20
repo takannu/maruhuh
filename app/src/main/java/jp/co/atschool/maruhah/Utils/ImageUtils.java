@@ -154,14 +154,9 @@ public class ImageUtils {
         // BaseになるBitmapの生成
         Canvas canvas = new Canvas(baseBitmap);
 
-        Bitmap baseImage = BitmapFactory.decodeResource(resources, R.mipmap.text_frame_2);
+        Bitmap baseImage = BitmapFactory.decodeResource(resources, R.mipmap.text_frame_3);
         baseImage = Bitmap.createScaledBitmap(baseImage, 400, 280, false);
         canvas.drawBitmap(baseImage, 0, 0, null);
-
-//        Bitmap frameBitmap = textCreateBitmap(context, resources,"新しいフォントを探す旅に出ることにします。");
-//        canvas.drawBitmap(frameBitmap, 30, 30, null);
-
-
 
         TextPaint textPaint = new TextPaint();
         textPaint.setARGB(150, 0, 0, 0);

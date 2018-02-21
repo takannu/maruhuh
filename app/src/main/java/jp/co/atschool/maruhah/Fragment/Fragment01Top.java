@@ -2,7 +2,6 @@ package jp.co.atschool.maruhah.Fragment;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,7 +24,6 @@ import com.twitter.sdk.android.core.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.co.atschool.maruhah.Activity.Activity05UserSearch;
 import jp.co.atschool.maruhah.Api.CustomTwitterApiClient;
 import jp.co.atschool.maruhah.Api.UserService;
 import jp.co.atschool.maruhah.Network.NetworkQuestion;
@@ -44,7 +42,6 @@ public class Fragment01Top extends Fragment {
 
     private LemonProgressDialog progressDialog;
 
-    @BindView(R.id.bTopSearch) Button bTopSearch; // ユーザ検索を行う
     @BindView(R.id.ibTweetOpen) ImageButton ibTweetOpen; // 質問を募集する
     @BindView(R.id.tvUserName) TextView tvUserName; // ユーザ名
     @BindView(R.id.tvUserId) TextView tvUserId; // twitter screen_name
@@ -72,22 +69,12 @@ public class Fragment01Top extends Fragment {
 
         mActivity.setTitle("Homete");
 
-        bTopSearch = (Button) view.findViewById(R.id.bTopSearch);
         ibTweetOpen = (ImageButton) view.findViewById(R.id.ibTweetOpen);
         tvUserName = (TextView) view.findViewById(R.id.tvUserName);
         ivMyProfile = (ImageView) view.findViewById(R.id.ivMyProfile);
         tvUserId = (TextView) view.findViewById(R.id.tvUserId);
         etQuestion = (EditText) view.findViewById(R.id.etQuestion);
         bSendQuestion = (Button) view.findViewById(R.id.bSendQuestion);
-
-        // 押すとユーザ検索画面へ移動
-        bTopSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mActivity, Activity05UserSearch.class);
-                mActivity.startActivity(intent);
-            }
-        });
 
         // 質問募集ボタンを押したら、ツイートを行う。
         ibTweetOpen.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +85,7 @@ public class Fragment01Top extends Fragment {
 
                 CustomTwitterApiClient mTwitter = new CustomTwitterApiClient(session);
 
-                String messsage= "私のいい所を褒めて下さい。";
+                String messsage= "私のいい所を褒めて下さい。\n\n#hometeアプリ https://play.google.com/store/apps/details?id=jp.co.atschool.homete";
 
                 mTwitter.tweet(getContext(), messsage, "");
 

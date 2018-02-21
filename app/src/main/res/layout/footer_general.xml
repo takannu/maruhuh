@@ -34,4 +34,17 @@
         android:textSize="10dp"
         android:textColor="@drawable/btn_tab_textcolor_selector"
         android:drawableTop="@drawable/btn_tab_history_selector"/>
+
+    <TextView
+        android:id="@+id/tvFooterSearch"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_weight="1"
+        android:text="検索"
+        android:background="@android:color/white"
+        android:paddingTop="3dp"
+        android:gravity="center"
+        android:textSize="10dp"
+        android:textColor="@drawable/btn_tab_textcolor_selector"
+        android:drawableTop="@drawable/btn_tab_search_selector"/>
 </LinearLayout>

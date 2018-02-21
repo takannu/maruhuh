@@ -3,11 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "jp.co.atschool.maruhah"
+        applicationId "jp.co.atschool.homete"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -41,6 +41,8 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
 
     compile 'org.twitter4j:twitter4j-core:4.0.4'
+
+    compile 'com.algolia:algoliasearch-android:3.+'
 }
 
 

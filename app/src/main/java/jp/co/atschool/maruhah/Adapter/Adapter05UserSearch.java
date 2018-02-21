@@ -3,6 +3,7 @@ package jp.co.atschool.maruhah.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +26,6 @@ public class Adapter05UserSearch extends RecyclerView.Adapter {
     private LayoutInflater layoutInflater = null;
     private ArrayList twitterIdList;
     private ArrayList twitterScreenNameList;
-
-    public Integer poss = 0; // 横軸の位置
 
     public Adapter05UserSearch(Activity activity, ArrayList twitter_ids, ArrayList twitter_screen_names) {
         this.mActivity = activity;
@@ -74,6 +73,7 @@ public class Adapter05UserSearch extends RecyclerView.Adapter {
             ButterKnife.bind(this, itemView);
 
             tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
+            tvScreenName.setTextColor(Color.BLACK);
         }
     }
 }

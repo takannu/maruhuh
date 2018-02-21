@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:136601557724:android:07214ae4c2b511d5",
         "android_client_info": {
-          "package_name": "jp.co.atschool.maruhah"
+          "package_name": "jp.co.atschool.homete"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "136601557724-6qeeb029qag55itdap2tkbidubpfm72e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "jp.co.atschool.maruhah",
+            "package_name": "jp.co.atschool.homete",
             "certificate_hash": "2aafa91de9a49cdf1001a330c94569b25645597a"
           }
         },

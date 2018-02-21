@@ -27,6 +27,7 @@ import jp.co.atschool.maruhah.Api.CustomTwitterApiClient;
 import jp.co.atschool.maruhah.Api.UserService;
 import jp.co.atschool.maruhah.Fragment.Fragment01Top;
 import jp.co.atschool.maruhah.Fragment.Fragment02History;
+import jp.co.atschool.maruhah.Fragment.Fragment03Search;
 import jp.co.atschool.maruhah.Network.NetworkUser;
 import jp.co.atschool.maruhah.Network.NetworkUserCheckUtilListener;
 import retrofit2.Call;
@@ -36,10 +37,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // ここにActivity全体で使うクラスや変数を書く
     private TextView tvFooterTop;
     private TextView tvFooterHistory;
+    private TextView tvFooterSearch;
     private View viewInterceptor;
 
     private Fragment01Top mFragment01Top;
     private Fragment02History mFragment02History;
+    private Fragment03Search mFragment03Search;
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -53,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         twitters();
         // firebaseのanalyticsをセット
         firebases();
+/*
+        Client client = new Client("QCTKVXTCT2", "d24c12af25c309a077881556e7be5b78");
+        Index index = client.getIndex("your_index_name");
+        */
 
         if (TwitterCore.getInstance().getSessionManager().getActiveSession() == null) {
             // Login画面にする
@@ -137,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvFooterTop.setOnClickListener(this);
         tvFooterHistory = (TextView)findViewById(R.id.tvFooterHistory);
         tvFooterHistory.setOnClickListener(this);
+        tvFooterSearch = (TextView)findViewById(R.id.tvFooterSearch);
+        tvFooterSearch.setOnClickListener(this);
         viewInterceptor = (View)findViewById(R.id.viewInterceptor);
 
         // このViewは何に使うかわからないので、一旦非表示にする。
@@ -153,6 +162,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tvFooterHistory:
                 switchTab(viewID);
                 break;
+            case R.id.tvFooterSearch:
+                switchTab(viewID);
+                break;
             default:
                 break;
         }
@@ -160,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void switchTab(int viewID) {
         // footerをタップすると該当の画像の色を変更する。(塗りつぶす)
-        View[] footer = new View[]{tvFooterTop, tvFooterHistory};
+        View[] footer = new View[]{tvFooterTop, tvFooterHistory, tvFooterSearch};
         for(int i=0; i<footer.length; i++){
             footer[i].setSelected(viewID == footer[i].getId());
         }
@@ -175,6 +187,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tvFooterHistory:
                 mFragment02History = new Fragment02History();
                 fragment = mFragment02History;
+                break;
+            case R.id.tvFooterSearch:
+                mFragment03Search = new Fragment03Search();
+                fragment = mFragment03Search;
                 break;
             default:
                 if(null == mFragment01Top) mFragment01Top = new Fragment01Top();

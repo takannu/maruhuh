@@ -85,7 +85,7 @@ public class Activity03QuestionDetail extends AppCompatActivity {
                             }
                         });
 
-                String tweet_body = etAnswer.getText().toString() + "\n";
+                String tweet_body = etAnswer.getText().toString() + "\n\n#hometeアプリ https://play.google.com/store/apps/details?id=jp.co.atschool.homete";
 
                 // ツイート
                 TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
